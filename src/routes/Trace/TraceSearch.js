@@ -249,7 +249,11 @@ export default class Trace extends PureComponent {
         </FormItem>
         <FormItem label="Service">
           {getFieldDecorator('serviceId')(
-            <Select placeholder="All service" style={{ width: '100%' }}>
+            <Select placeholder="All service" 
+              placeholder="All service"
+              style={{ width: '100%' }}
+              showSearch
+              optionFilterProp="children">
               {options.serviceId && options.serviceId.map((service) => {
                   return (
                     <Option key={service.key ? service.key : -1} value={service.key}>
