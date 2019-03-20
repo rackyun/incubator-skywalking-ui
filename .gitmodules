@@ -1,3 +1,4 @@
 [submodule "query-protocol"]
 	path = query-protocol
-	url = https://github.com/apache/incubator-skywalking-query-protocol.git
+    url = https://github.com/rackyun/incubator-skywalking-query-protocol.git
+    branch = 6.0.0-keep
