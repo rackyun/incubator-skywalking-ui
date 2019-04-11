@@ -159,6 +159,21 @@ const spanQuery = `query Spans($traceId: ID!) {
       }
     }
   }
+  queryLog(traceId: $traceId) {
+    logRecords {
+      traceId
+      span
+      hostname
+      appname
+      time
+      level
+      thread
+      location
+      message
+      stack
+    }
+    total
+  }
 }`;
 
 const metricQuery = `
@@ -289,6 +304,7 @@ export default base({
         data: {
           ...data,
           queryTrace: payload.data.queryTrace,
+          queryLog: payload.data.queryLog,
           currentTraceId: traceId,
           showTimeline: true,
         },

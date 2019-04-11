@@ -263,7 +263,7 @@ export default class Endpoint extends PureComponent {
     const { form, endpoint } = this.props;
     const { getFieldDecorator } = form;
     const { variables: { options }, data } = endpoint;
-    const { showTimeline, queryTrace, currentTraceId } = data;
+    const { showTimeline, queryTrace, queryLog, currentTraceId } = data;
     if (!this.serviceInfo) {
       this.serviceInfo = data.serviceInfo;
     }
@@ -325,7 +325,7 @@ export default class Endpoint extends PureComponent {
           <Col span={showTimeline ? 24 : 0}>
             {showTimeline ? (
               <TraceTimeline
-                trace={{ data: { queryTrace, currentTraceId } }}
+                trace={{ data: { queryTrace, queryLog, currentTraceId } }}
               />
             ) : null}
           </Col>

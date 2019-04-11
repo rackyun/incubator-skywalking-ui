@@ -80,6 +80,21 @@ const spanQuery = `query Spans($traceId: ID!) {
       }
     }
   }
+  queryLog(traceId: $traceId) {
+    logRecords {
+      traceId
+      span
+      hostname
+      appname
+      time
+      level
+      thread
+      location
+      message
+      stack
+    }
+    total
+  }
 }`;
 
 export default base({
@@ -91,6 +106,10 @@ export default base({
     },
     queryTrace: {
       spans: [],
+    },
+    queryLog: {
+      logRecords: [],
+      total: 0,
     },
     showTimeline: false,
   },
@@ -133,6 +152,7 @@ export default base({
         data: {
           ...data,
           queryTrace: payload.data.queryTrace,
+          queryLog: payload.data.queryLog,
           currentTraceId: traceId,
           showTimeline: true,
         },

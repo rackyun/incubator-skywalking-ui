@@ -20,10 +20,15 @@ import { Card, Badge, Row, Col, Tag } from 'antd';
 import moment from 'moment';
 import { formatDuration } from '../../utils/time';
 import TraceStack from '../../components/TraceStack';
+import TraceLogRecord from './TraceLogRecord';
 
 const timeFormat = 'YYYY-MM-DD HH:mm:ss';
 
 export default class TraceTimeLine extends PureComponent {
+  state = {
+    key: 'spans',
+  };
+
   getTotalDuration = (spans) => {
     let minStartTime = 0;
     let maxEndTime = 0;
@@ -65,10 +70,39 @@ export default class TraceTimeLine extends PureComponent {
     );
   }
 
+  onTabChange = (key, type) => {
+    this.setState({ [type]: key });
+  };
+
   render() {
-    const { trace: { data: { queryTrace: { spans }, currentTraceId } } } = this.props;
+    const tabList = [];
+    const contentList = {};
+    const {...stateData} = this.state;
+    const { trace: { data: { queryTrace: { spans }, queryLog: { logRecords }, currentTraceId } } } = this.props;
     if (spans.length < 1) {
       return null;
+    }
+    tabList.push({
+      key: 'spans',
+      tab: 'Spans',
+    });
+    contentList.spans = (
+      <div>
+        <Tag style={{ marginBottom: 20 }}>{currentTraceId}</Tag>
+        <TraceStack spans={spans} />
+      </div>
+    );
+    if (logRecords.length > 0) {
+      tabList.push({
+        key: 'appLogs',
+        tab: 'AppLogs',
+      });
+      contentList.appLogs = (
+        <div>
+          <Tag style={{ marginBottom: 20 }}>{currentTraceId}</Tag>
+          <TraceLogRecord logRecords={logRecords} />
+        </div>
+      );
     }
     return (
       <Card
@@ -88,9 +122,10 @@ export default class TraceTimeLine extends PureComponent {
             },
           ])
         }
+        tabList={tabList}
+        onTabChange={(key) => { this.onTabChange(key, 'key'); }}
       >
-        <Tag style={{ marginBottom: 20 }}>{currentTraceId}</Tag>
-        <TraceStack spans={spans} />
+        {contentList[stateData.key]}
       </Card>
     );
   }
