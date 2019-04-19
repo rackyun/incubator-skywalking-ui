@@ -70,7 +70,7 @@ const layoutButtonStyle = { height: '90%', verticalAlign: 'middle', paddingBotto
 }))
 export default class Topology extends PureComponent {
   static defaultProps = {
-    graphHeight: 600,
+    graphHeight: 800,
   };
 
   findValue = (id, values) => {
