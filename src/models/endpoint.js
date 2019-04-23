@@ -162,15 +162,10 @@ const spanQuery = `query Spans($traceId: ID!) {
   queryLog(traceId: $traceId) {
     logRecords {
       traceId
-      span
       hostname
       appname
       time
-      level
-      thread
-      location
       message
-      stack
     }
     total
   }
