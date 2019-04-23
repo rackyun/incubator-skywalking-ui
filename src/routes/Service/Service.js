@@ -161,7 +161,7 @@ export default class Service extends PureComponent {
               >
                 <AppTopology
                   elements={data.getServiceTopology}
-                  height={800}
+                  height={600}
                   layout={{
                     name: 'dagre',
                     rankDir: 'LR',

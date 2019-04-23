@@ -38,7 +38,7 @@ export default class TraceLogRecord extends PureComponent {
               description={
                 <DescriptionList layout="vertical" col={1}>
                   <Description key="hostname" term={log.hostname}>
-                    <pre className={styles.pre}>[{log.time}] [{log.level}] [{log.thread} {log.location}] {log.message} {log.stack}</pre>
+                    <pre className={styles.pre}>[{log.time}] {log.message}</pre>
                   </Description>
                 </DescriptionList>
               }
