@@ -133,6 +133,8 @@ export default base({
           name
           type
           isReal
+          sla
+          cpm
         }
         calls {
           id

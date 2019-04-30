@@ -77,7 +77,7 @@ export default class AppTopology extends Base {
         onSelectedApplication();
       });
     }
-    
+
   }
 
   updateMetrics = (cy, data) => {
@@ -89,7 +89,7 @@ export default class AppTopology extends Base {
     const { sla: { values: slaValues } } = data;
     const layer = cy.cyCanvas();
     const canvas = layer.getCanvas();
-    
+
     cy.on('render cyCanvas.resize', () => {
       const ctx = canvas.getContext('2d');
       layer.resetTransform(ctx);
@@ -109,13 +109,16 @@ export default class AppTopology extends Base {
           sla = nodeSla.value;
         }
 
+        let outR = this.getNodeSize(node.data('cpm'), 26);
+        let innR = this.getNodeSize(node.data('cpm'), 20);
+
         const arc = d3.arc()
-            .outerRadius(33)
-            .innerRadius(27)
-            .context(ctx);
+          .outerRadius(outR)
+          .innerRadius(innR)
+          .context(ctx);
 
         const pie = d3.pie()
-            .sort(null);
+          .sort(null);
 
         ctx.translate(pos.x, pos.y);
 
@@ -151,26 +154,26 @@ export default class AppTopology extends Base {
     })
     const cpmFunc = this.mapFunc(cpm.values);
     cy.style().selector('edge')
-    .css({
-      width: ele => cpmFunc(ele.data('dataId'), 3, 12),
-      'line-color': ele => this.lineColor(latency.values, ele.data('dataId'), colorRange),
-      'target-arrow-color': ele => this.lineColor(latency.values, ele.data('dataId'), colorRange),
-      'curve-style': 'bezier',
-      'control-point-step-size': 100,
-      'target-arrow-shape': 'triangle',
-      'arrow-scale': 1.2,
-      'opacity': 0.666,
-      'text-wrap': 'wrap',
-      'text-rotation': 'autorotate',
-    })
-    .update();
+      .css({
+        width: ele => cpmFunc(ele.data('dataId'), 3, 12),
+        'line-color': ele => this.lineColor(latency.values, ele.data('dataId'), colorRange),
+        'target-arrow-color': ele => this.lineColor(latency.values, ele.data('dataId'), colorRange),
+        'curve-style': 'bezier',
+        'control-point-step-size': 100,
+        'target-arrow-shape': 'triangle',
+        'arrow-scale': 1.2,
+        'opacity': 0.666,
+        'text-wrap': 'wrap',
+        'text-rotation': 'autorotate',
+      })
+      .update();
   }
 
   mapFunc = (values) => {
     if (values.length < 1) {
       return (id, rLimit) => {
         return rLimit;
-      }; 
+      };
     }
     const valueData = values.map(_ => _.value);
     const max = Math.max(...valueData);
@@ -205,12 +208,24 @@ export default class AppTopology extends Base {
     return range ? range.color : '#40a9ff';
   }
 
+  getNodeSize = (value, initSize) => {
+    const range = [1000, 10000, 100000];
+    let factor = 1;
+    for (let i = 0; i < range.length; i++) {
+      factor = i + 1;
+      if (value <= range[i]) {
+        break;
+      }
+    }
+    return initSize * factor;
+  }
+
   getStyle = () => {
     return cytoscape.stylesheet()
       .selector('node[?isReal]')
       .css({
-        width: 60,
-        height: 60,
+        width: ele => this.getNodeSize(ele.data('cpm'), 50),
+        height: ele => this.getNodeSize(ele.data('cpm'), 50),
         'text-valign': 'bottom',
         'text-halign': 'center',
         'font-family': 'Microsoft YaHei',
@@ -219,14 +234,14 @@ export default class AppTopology extends Base {
         'border-width': 6,
         'border-color': '#40a9ff',
         'background-image': ele => `img/node/${ele.data('type') ? ele.data('type').toUpperCase() : 'UNDEFINED'}.png`,
-        'background-width': '60%',
-        'background-height': '60%',
+        'background-width': ele => this.getNodeSize(ele.data('cpm'), 30),
+        'background-height': ele => this.getNodeSize(ele.data('cpm'), 30),
         'background-color': '#e6f7ff',
       })
       .selector('node:selected')
       .css({
-        width: 67,
-        height: 67,
+        width: ele => this.getNodeSize(ele.data('cpm'), 50),
+        height: ele => this.getNodeSize(ele.data('cpm'), 50),
         'border-width': 13,
       })
       .selector('.faded')
