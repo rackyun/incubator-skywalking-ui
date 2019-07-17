@@ -41,7 +41,7 @@ class TraceStack extends PureComponent {
     bap: [],
     span: {},
     key: 'tags',
-    treeMode: true,
+    treeMode: false,
   }
 
   componentWillMount() {
